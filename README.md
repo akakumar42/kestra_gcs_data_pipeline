@@ -11,12 +11,14 @@ The pipeline automates the following steps:
 - **Parameterization:** Allows users to select taxi type, year, and month for flexible data ingestion.
 - **Resource Provisioning:** Automates the creation of GCS buckets and BigQuery datasets if they do not exist.
 - **Configuration Management:** Uses Kestra key-value pairs for managing GCP credentials, project IDs, dataset names, and bucket names.
+- **Scheduling:** Supports automated, scheduled ETL runs using the new `gcp_taxi_schedule.yaml` flow.
 
 ## Project Structure
 
 - [`gcp_setup.yaml`](gcp_setup.yaml): Kestra flow to provision GCS buckets and BigQuery datasets.
 - [`set_kv_pair.yaml`](set_kv_pair.yaml): Sets up required GCP configuration as key-value pairs in Kestra.
 - [`gcp_taxi.yaml`](gcp_taxi.yaml): Main ETL pipeline flow for extracting, uploading, and loading NYC Taxi data.
+- [`gcp_taxi_schedule.yaml`](gcp_taxi_schedule.yaml): Scheduled Kestra flow to automate periodic ETL runs.
 - `README.md`: Project documentation (this file).
 
 ## How It Works
@@ -33,7 +35,11 @@ The pipeline automates the following steps:
      - Create or update partitioned tables in BigQuery.
      - Merge new data, ensuring no duplicates via unique row IDs.
 
-3. **Customization**
+3. **Automate with Scheduling**
+   - Use [`gcp_taxi_schedule.yaml`](gcp_taxi_schedule.yaml) to schedule ETL runs (e.g., monthly or as needed).
+   - This enables hands-off, recurring data ingestion and processing.
+
+4. **Customization**
    - All GCP resource names and credentials are managed via Kestra key-value pairs for easy reconfiguration.
    - The pipeline supports both yellow and green taxi schemas, handling their differences automatically.
 
@@ -48,13 +54,14 @@ The pipeline automates the following steps:
 1. **Clone this repository**
 2. **Set your GCP configuration** in [`set_kv_pair.yaml`](set_kv_pair.yaml).
 3. **Provision resources** by running [`gcp_setup.yaml`](gcp_setup.yaml).
-4. **Run the ETL pipeline** using [`gcp_taxi.yaml`](gcp_taxi.yaml).
+4. **Run the ETL pipeline** using [`gcp_taxi.yaml`](gcp_taxi.yaml) or schedule it with [`gcp_taxi_schedule.yaml`](gcp_taxi_schedule.yaml).
 
 ## Notes
 
 - Ensure your GCS bucket name is globally unique.
 - Update the `GCP_PROJECT_ID` and other key-value pairs to match your GCP environment.
 - The pipeline is modular and can be extended for additional data sources or transformations.
+- Scheduled flows help automate data freshness and reduce manual intervention.
 
 ## References
 
